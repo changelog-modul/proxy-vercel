@@ -1,9 +1,11 @@
 export default async function handler(req, res) {
   try {
-    const target = req.query.url;
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    const target = url.searchParams.get("url");
 
     if (!target || !/^https?:\/\//.test(target)) {
-      return res.status(400).send("Invalid URL");
+      res.statusCode = 400;
+      return res.end("Invalid URL");
     }
 
     const r = await fetch(target, {
@@ -13,12 +15,14 @@ export default async function handler(req, res) {
       }
     });
 
-    const t = await r.text();
+    const text = await r.text();
 
     res.setHeader("Content-Type", "text/plain");
-    res.status(200).send(t);
+    res.statusCode = 200;
+    res.end(text);
 
   } catch (e) {
-    res.status(500).send("Proxy error: " + e.message);
+    res.statusCode = 500;
+    res.end("Proxy error: " + e.message);
   }
 }
