@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
   try {
-    const target = req.url.replace("/api/proxy/", "");
+    const target = req.url.replace("/api/proxy/", "https://raw.githubusercontent.com/changelog-modul/PHOENIXX-HUB/refs/heads/main/start");
 
     if (!target.startsWith("http")) {
       return res.status(400).send("Invalid URL");
