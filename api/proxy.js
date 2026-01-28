@@ -1,19 +1,24 @@
 export default async function handler(req, res) {
   try {
-    const rawUrl = req.url.replace(/^\/api\/proxy\/?/, "");
-    const target = decodeURIComponent(rawUrl);
+    const target = req.query.url;
 
-    if (!target.startsWith("http://") && !target.startsWith("https://")) {
+    if (!target || !/^https?:\/\//.test(target)) {
       return res.status(400).send("Invalid URL");
     }
 
-    const response = await fetch(target);
-    const text = await response.text();
+    const r = await fetch(target, {
+      headers: {
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "*/*"
+      }
+    });
+
+    const t = await r.text();
 
     res.setHeader("Content-Type", "text/plain");
-    res.status(200).send(text);
+    res.status(200).send(t);
 
-  } catch (err) {
-    res.status(500).send("Proxy error: " + err.message);
+  } catch (e) {
+    res.status(500).send("Proxy error: " + e.message);
   }
 }
