@@ -1,8 +1,7 @@
 {
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/api/proxy/$1"
+  "functions": {
+    "api/*.js": {
+      "runtime": "edge"
     }
-  ]
+  }
 }
