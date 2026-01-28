@@ -1,8 +1,9 @@
 export default async function handler(req, res) {
   try {
-    const target = req.url.replace("/api/proxy/", "");
+    const rawUrl = req.url.replace(/^\/api\/proxy\/?/, "");
+    const target = decodeURIComponent(rawUrl);
 
-    if (!target.startsWith("http")) {
+    if (!target.startsWith("http://") && !target.startsWith("https://")) {
       return res.status(400).send("Invalid URL");
     }
 
@@ -13,6 +14,6 @@ export default async function handler(req, res) {
     res.status(200).send(text);
 
   } catch (err) {
-    res.status(500).send("Proxy error");
+    res.status(500).send("Proxy error: " + err.message);
   }
 }
